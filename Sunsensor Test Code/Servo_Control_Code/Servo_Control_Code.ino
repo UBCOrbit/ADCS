@@ -1,5 +1,5 @@
-#define SENSOR_PIN 9
-#define PLATFORM_PIN 10
+#define SENSOR_PIN 5
+#define PLATFORM_PIN 6
 #define VOLTAGE1_PIN A0
 #define VOLTAGE2_PIN A1
 #define VOLTAGE3_PIN A2
@@ -16,6 +16,9 @@ int voltage1;
 int voltage2;
 int voltage3;
 int voltage4;
+double actualAngle1;
+double actualAngle2;
+double sum;
 
 void setup() {
   pinMode(VOLTAGE1_PIN, INPUT);
@@ -42,6 +45,9 @@ void setup() {
       voltage2 = analogRead(VOLTAGE2_PIN); delay(100);
       voltage3 = analogRead(VOLTAGE3_PIN); delay(100);
       voltage4 = analogRead(VOLTAGE4_PIN); delay(100);
+      sum = voltage1 + voltage2 + voltage3 + voltage4;
+      actualAngle1 = (voltage1 + voltage2 - voltage3 - voltage4)/sum;
+      actualAngle2 = (voltage2 + voltage3 - voltage1 - voltage4)/sum;
       
       Serial.print(String(sens) + ',' 
                  + String(plat) + ',' 
@@ -49,12 +55,14 @@ void setup() {
                  + String(voltage2) + ',' 
                  + String(voltage3) + ',' 
                  + String(voltage4) + ','
+                 + String(actualAngle1) + ','
+                 + String(actualAngle2) + ','
                  + '\n');
     }
     // Slowly reset back to other side
     for (int back = 30; back >= -30; back--) {
       Sensor.write(back + 90);
-      delay(10);
+      delay(20);
     }
   }
 }
