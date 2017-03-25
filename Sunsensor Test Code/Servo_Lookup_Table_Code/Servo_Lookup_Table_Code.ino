@@ -4,9 +4,6 @@
 #define VOLTAGE2_PIN A1
 #define VOLTAGE3_PIN A2
 #define VOLTAGE4_PIN A3
-#define REFERENCE_VOLTAGE_PIN A4
-#define HEIGHT 0.002625
-#define DIAMETER 0.001
 #define PLATFORM_START_ANGLE 85
 #define SERVO_START_ANGLE 93
 
@@ -21,10 +18,6 @@ int voltage1;
 int voltage2;
 int voltage3;
 int voltage4;
-double M;
-double N;
-double alpha;
-double beta;
 double sum;
 
 void setup() {
@@ -39,7 +32,7 @@ void setup() {
   Sensor.write(SERVO_START_ANGLE);
   Platform.write(PLATFORM_START_ANGLE);
   analogReference(EXTERNAL);
-  delay(2000);
+  delay(6000);
   for (plat = -30; plat < 30; plat++) {
     delay(200);
     Platform.write(plat + PLATFORM_START_ANGLE);
@@ -55,21 +48,15 @@ void readAndCalc() {
   voltage3 = analogRead(VOLTAGE3_PIN); delay(100);
   voltage4 = analogRead(VOLTAGE4_PIN); delay(100);
   sum = voltage1 + voltage2 + voltage3 + voltage4;
-  M = (voltage1 + voltage2 - voltage3 - voltage4)/sum;
-  N = (voltage2 + voltage3 - voltage1 - voltage4)/sum;
-  alpha = 180*atan2(DIAMETER/HEIGHT, M)/PI;
-  beta = 180*atan2(DIAMETER/HEIGHT, N)/PI;
 }
 
 void serialPrint() {
   Serial.print(String(sens) + ',' 
                  + String(plat) + ',' 
-                 + String(voltage1) + ',' 
-                 + String(voltage2) + ',' 
-                 + String(voltage3) + ',' 
-                 + String(voltage4) + ','
-                 + String(alpha) + ','
-                 + String(beta) + ','
+                 + String(voltage1/sum) + ',' 
+                 + String(voltage2/sum) + ',' 
+                 + String(voltage3/sum) + ',' 
+                 + String(voltage4/sum) + ','
                  + '\n');
 }
 
