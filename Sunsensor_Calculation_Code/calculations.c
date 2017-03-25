@@ -48,10 +48,12 @@ Calculates the deviation between two sets of voltage values
 @return - a float between 0 and 4 indicating the deviation
 */
 float getDeviation(voltage_t *realVolts, voltage_t *lookVolts) {
+	float realSum = realVolts->volt1 + realVolts->volt2 + realVolts->volt3 + realVolts->volt4;
+	float lookSum = lookVolts->volt1 + lookVolts->volt2 + lookVolts->volt3 + lookVolts->volt4;
 	return
-		fabs(realVolts->volt1 - lookVolts->volt1) +
-		fabs(realVolts->volt2 - lookVolts->volt2) +
-		fabs(realVolts->volt3 - lookVolts->volt3) +
-		fabs(realVolts->volt4 - lookVolts->volt4);
+		fabs(realVolts->volt1 / realSum - lookVolts->volt1 / lookSum) +
+		fabs(realVolts->volt2 / realSum - lookVolts->volt2 / lookSum) +
+		fabs(realVolts->volt3 / realSum - lookVolts->volt3 / lookSum) +
+		fabs(realVolts->volt4 / realSum - lookVolts->volt4 / lookSum);
 }
 
