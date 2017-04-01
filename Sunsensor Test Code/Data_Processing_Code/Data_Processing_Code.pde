@@ -9,7 +9,7 @@ String[] inputString;
 PrintWriter output;
 
 void setup() {
-  size(400,300);
+  size(600,600);
   // Display all aailible serial ports
   println(Serial.list());
   println("START");
@@ -18,7 +18,7 @@ void setup() {
   comPort.bufferUntil('\n');
   // Initialize output data file
   output = createWriter("Data.txt");
-  output.println("AngleServo,AnglePlatform,Voltage1,Voltage2,Voltage3,Voltage4,ReferenceVoltage");
+  output.println("AngleServo,AnglePlatform,Voltage1,Voltage2,Voltage3,Voltage4");
 }
 
 void draw() {

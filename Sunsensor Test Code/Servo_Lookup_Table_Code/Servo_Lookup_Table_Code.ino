@@ -31,7 +31,7 @@ void setup() {
   Platform.attach(PLATFORM_PIN);
   Sensor.write(SERVO_START_ANGLE);
   Platform.write(PLATFORM_START_ANGLE);
-  analogReference(EXTERNAL);
+  //analogReference(EXTERNAL);
   delay(6000);
   for (plat = -30; plat < 30; plat++) {
     delay(200);
@@ -59,6 +59,15 @@ void serialPrint() {
                  + String(voltage4/sum) + ','
                  + '\n');
 }
+//void serialPrint() {
+//  Serial.print(String(sens) + ',' 
+//                 + String(plat) + ',' 
+//                 + String(voltage1) + ',' 
+//                 + String(voltage2) + ',' 
+//                 + String(voltage3) + ',' 
+//                 + String(voltage4) + ','
+//                 + '\n');
+//}
 
 void sweep(bool right) {
   if (right) {
