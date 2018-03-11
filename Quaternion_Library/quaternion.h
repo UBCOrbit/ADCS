@@ -1,3 +1,6 @@
+#ifndef __QUATERNION_H
+#define __QUATERNION_H
+
 namespace Quaternion
 {
 	/**
@@ -13,6 +16,14 @@ namespace Quaternion
 			double c;
 			double d;
 
+			quat()
+			{
+				this->a = 0;
+				this->b = 0;
+				this->c = 0;
+				this->d = 0;
+			}
+
 			quat(double a, double b, double c, double d)
 			{
 				this->a = a;
@@ -21,29 +32,42 @@ namespace Quaternion
 				this->d = d;
 			}
 
-			quat negate(void);
+			quat& operator= (const quat &q);
 
-			quat conjugate(void);
+			quat& operator+= (const quat &q);
+
+			quat& operator-= (const quat &q);
+
+			quat& operator*= (const quat &q);
+
+			bool operator== (const quat &q);
+
+			const quat negate(void);
+
+			const quat conjugate(void);
 
 			double norm(void);
 
 	};
 
-			quat operator+ (const quat &q1, const quat &q2);
+	const quat operator+ (const quat &q1, const quat &q2);
 
-			quat operator+ (const quat &q, double r);
+	const quat operator+ (const quat &q, double r);
 
-			quat operator+ (double r, const quat &q);
+	const quat operator+ (double r, const quat &q);
 
-			quat operator* (const quat &q1, const quat &q2);
+	const quat operator* (const quat &q1, const quat &q2);
 
-			quat operator* (const quat &q, double r);
+	const quat operator* (const quat &q, double r);
 
-			quat operator* (double r, const quat &q);
+	const quat operator* (double r, const quat &q);
 
-			quat operator- (const quat &q1, const quat &q2);
+	const quat operator- (const quat &q1, const quat &q2);
 
-			quat operator- (const quat &q, double r);
+	const quat operator- (const quat &q, double r);
 
-			quat operator- (double r, const quat &q);
+	const quat operator- (double r, const quat &q);
+
 }
+
+#endif // __QUATERNION_H
