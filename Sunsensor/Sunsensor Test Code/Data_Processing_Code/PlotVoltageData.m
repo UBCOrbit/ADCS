@@ -1,44 +1,29 @@
+filename = 'SunSensor Data_raw.txt';
+AnglePlat = int8(csvread(filename,1,0,[1,0,3600,0]));
+AngleServo = int8(csvread(filename,1,1,[1,1,3600,1]));
+Voltage1 = csvread(filename,1,2,[1,2,3600,2]);
+Voltage2 = csvread(filename,1,3,[1,3,3600,3]);
+Voltage3 = csvread(filename,1,4,[1,4,3600,4]);
+Voltage4 = csvread(filename,1,5,[1,5,3600,5]);
+
 Volt1 = zeros(60,60);
-for i = 1:60
-    if(rem(i,2) == 0)
-     for j = 1:60
-         Volt1(i,j) = Voltage1(60*(i-1) + j);
-         if(Volt1(i,j) > 1)
-             Volt1(i,j) = 00;
-         end
-         Volt2(i,j) = Voltage2(60*(i-1) + j);
-         if(Volt2(i,j) > 1)
-             Volt2(i,j) = 0;
-         end
-         Volt3(i,j) = Voltage3(60*(i-1) + j);
-         if(Volt3(i,j) > 1)
-             Volt3(i,j) = 0;
-         end
-         Volt4(i,j) = Voltage4(60*(i-1) + j);
-         if(Volt4(i,j) > 1)
-             Volt4(i,j) = 0;
-         end
+Volt2 = zeros(60,60);
+Volt3 = zeros(60,60);
+Volt4 = zeros(60,60);
+for i = 1:3600
+     Volt1(AnglePlat(i)+31,AngleServo(i)+31) = Voltage1(i);
+     Volt2(AnglePlat(i)+31,AngleServo(i)+31) = Voltage2(i);
+     Volt3(AnglePlat(i)+31,AngleServo(i)+31) = Voltage3(i);
+     Volt4(AnglePlat(i)+31,AngleServo(i)+31) = Voltage4(i);
+     if Voltage1(i) > 100
+        Volt1(AnglePlat(i)+31,AngleServo(i)+31) = 0;
+     elseif Voltage2(i) > 100
+        Volt2(AnglePlat(i)+31,AngleServo(i)+31) = 0;
+     elseif Voltage3(i) > 100
+        Volt3(AnglePlat(i)+31,AngleServo(i)+31) = 0;
+     elseif Voltage4(i) > 100
+        Volt4(AnglePlat(i)+31,AngleServo(i)+31) = 0;
      end
-    else 
-        for j = 1:60
-         Volt1(i,61-j) = Voltage1(60*(i-1) + j);
-         if(Volt1(i,61-j) > 1)
-             Volt1(i,61-j) = 00;
-         end
-         Volt2(i,61-j) = Voltage2(60*(i-1) + j);
-         if(Volt2(i,61-j) > 1)
-             Volt2(i,61-j) = 0;
-         end
-         Volt3(i,61-j) = Voltage3(60*(i-1) + j);
-         if(Volt3(i,61-j) > 1)
-             Volt3(i,61-j) = 0;
-         end
-         Volt4(i,61-j) = Voltage4(60*(i-1) + j);
-         if(Volt4(i,61-j) > 1)
-             Volt4(i,61-j) = 0;
-         end
-        end
-    end
 end
 
 %platform = linspace(-29,30,60);

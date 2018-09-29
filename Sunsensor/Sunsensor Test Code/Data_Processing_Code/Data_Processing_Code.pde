@@ -17,8 +17,8 @@ void setup() {
   comPort = new Serial(this, Serial.list()[0], 9600);
   comPort.bufferUntil('\n');
   // Initialize output data file
-  output = createWriter("Data.txt");
-  output.println("AngleServo,AnglePlatform,Voltage1,Voltage2,Voltage3,Voltage4");
+  output = createWriter("DataProof.txt");
+  output.println("Voltage1,Voltage2,Voltage3,Voltage4,Calc_angles,Input_angles");
 }
 
 void draw() {
