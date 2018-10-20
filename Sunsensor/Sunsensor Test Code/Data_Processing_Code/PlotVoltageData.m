@@ -1,4 +1,4 @@
-filename = 'SunSensor Data_raw.txt';
+filename = 'C:\Users\aless\Documents\UBC Orbit\ADCS-SunSensorData\Sun_Sensor_Data\Data_raw.txt';
 AnglePlat = int8(csvread(filename,1,0,[1,0,3600,0]));
 AngleServo = int8(csvread(filename,1,1,[1,1,3600,1]));
 Voltage1 = csvread(filename,1,2,[1,2,3600,2]);
