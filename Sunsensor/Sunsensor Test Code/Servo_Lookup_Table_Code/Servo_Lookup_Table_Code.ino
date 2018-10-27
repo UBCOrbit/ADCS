@@ -1,5 +1,5 @@
 #define SENSOR_PIN 6
-#define PLATFORM_PIN 5
+#define PLATFORM_PIN 3
 #define VOLTAGE1_PIN A0
 #define VOLTAGE2_PIN A1
 #define VOLTAGE3_PIN A2
@@ -86,17 +86,18 @@ void readAndCalc() {
 }
 
 void serialPrint() {
-  Serial.print("Voltage: "
+  Serial.print(   // "AnglesInput: "
+                   String(sens) + ','
+                 + String(plat) + ','
+                 //"Voltage: " +
                  + String(C1*voltage1) + ',' 
                  + String(C2*voltage2) + ',' 
                  + String(C3*voltage3) + ',' 
                  + String(C4*voltage4) + ','
-                 + "Angles: "
-                 + String(alpha) + ','
-                 + String(beta) + ','
-                 + "AnglesInput: "
-                 + String(sens) + ','
-                 + String(plat) + ','
+                 //+ "Angles: "
+                 //+ String(alpha) + ','
+                 //+ String(beta) + ','
+                
                  + '\n');
 }
 
@@ -118,5 +119,3 @@ void sweep(bool right) {
     }
   }
 }
-
-
