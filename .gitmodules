@@ -1,0 +1,3 @@
+[submodule "Sunsensor/Sunsensor Test Code/Photodiode-parser"]
+	path = Sunsensor/Sunsensor Test Code/Photodiode-parser
+	url = https://github.com/AlessandroHardjono/Photodiode-parser.git
