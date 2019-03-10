@@ -93,7 +93,7 @@ void serialPrint() {
                  + String(C1*voltage1) + ',' 
                  + String(C2*voltage2) + ',' 
                  + String(C3*voltage3) + ',' 
-                 + String(C4*voltage4) + ','
+                 + String(C4*voltage4)
                  //+ "Angles: "
                  //+ String(alpha) + ','
                  //+ String(beta) + ','
