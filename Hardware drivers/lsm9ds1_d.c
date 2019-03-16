@@ -1302,3 +1302,292 @@ int32_t lsm9ds1_i2c_interface_get(lsm9ds1_ctx_t *ctx_mag,
   return ret;
 }
 
+
+/**
+  * @}
+  *
+  */
+
+/**
+  * @defgroup     LSM9DS1_Fifo
+  * @brief        This section group all the functions concerning the
+  *               fifo usage
+  * @{
+  *
+  */
+
+/**
+  * @brief  Sensing chain FIFO stop values memorization at threshold
+  *         level.[set]
+  *
+  * @param  ctx    Read / write interface definitions.(ptr)
+  * @param  val    Change the values of stop_on_fth in reg CTRL_REG9.
+  * @retval        Interface status (MANDATORY: return 0 -> no Error).
+  *
+  */
+int32_t lsm9ds1_fifo_stop_on_wtm_set(lsm9ds1_ctx_t *ctx, uint8_t val)
+{
+  lsm9ds1_ctrl_reg9_t ctrl_reg9;
+  int32_t ret;
+
+  ret = lsm9ds1_read_reg(ctx, LSM9DS1_CTRL_REG9, (uint8_t*)&ctrl_reg9, 1);
+  if(ret == 0){
+    ctrl_reg9.stop_on_fth = (uint8_t)val;
+    ret = lsm9ds1_write_reg(ctx, LSM9DS1_CTRL_REG9, (uint8_t*)&ctrl_reg9, 1);
+  }
+  return ret;
+}
+
+/**
+  * @brief  Sensing chain FIFO stop values memorization at
+  *         threshold level.[get]
+  *
+  * @param  ctx    Read / write interface definitions.(ptr)
+  * @param  val    Get the values of stop_on_fth in reg CTRL_REG9.(ptr)
+  * @retval        Interface status (MANDATORY: return 0 -> no Error).
+  *
+  */
+int32_t lsm9ds1_fifo_stop_on_wtm_get(lsm9ds1_ctx_t *ctx, uint8_t *val)
+{
+  lsm9ds1_ctrl_reg9_t ctrl_reg9;
+  int32_t ret;
+
+  ret = lsm9ds1_read_reg(ctx, LSM9DS1_CTRL_REG9, (uint8_t*)&ctrl_reg9, 1);
+  *val = (uint8_t)ctrl_reg9.stop_on_fth;
+
+  return ret;
+}
+
+/**
+  * @brief  FIFO mode selection.[set]
+  *
+  * @param  ctx    Read / write interface definitions.(ptr)
+  * @param  val    Change the values of "fifo_en" in reg LSM9DS1.
+  * @retval        Interface status (MANDATORY: return 0 -> no Error).
+  *
+  */
+int32_t lsm9ds1_fifo_mode_set(lsm9ds1_ctx_t *ctx, lsm9ds1_fifo_md_t val)
+{
+  lsm9ds1_ctrl_reg9_t ctrl_reg9;
+  lsm9ds1_fifo_ctrl_t fifo_ctrl;
+  int32_t ret;
+
+  ret = lsm9ds1_read_reg(ctx, LSM9DS1_CTRL_REG9, (uint8_t*)&ctrl_reg9, 1);
+  if(ret == 0){
+    ctrl_reg9.fifo_en = ( ( (uint8_t)val & 0x10U ) >> 4);
+    ret = lsm9ds1_write_reg(ctx, LSM9DS1_CTRL_REG9, (uint8_t*)&ctrl_reg9, 1);
+  }
+  if(ret == 0){
+    ret = lsm9ds1_read_reg(ctx, LSM9DS1_FIFO_CTRL, (uint8_t*)&fifo_ctrl, 1);
+  }
+  if(ret == 0){
+    fifo_ctrl.fmode = ( (uint8_t)val & 0x0FU );
+    ret = lsm9ds1_write_reg(ctx, LSM9DS1_FIFO_CTRL, (uint8_t*)&fifo_ctrl, 1);
+  }
+  return ret;
+}
+
+/**
+  * @brief  FIFO mode selection.[get]
+  *
+  * @param  ctx    Read / write interface definitions.(ptr)
+  * @param  val    Get the values of fifo_en in reg CTRL_REG9.(ptr)
+  * @retval        Interface status (MANDATORY: return 0 -> no Error).
+  *
+  */
+int32_t lsm9ds1_fifo_mode_get(lsm9ds1_ctx_t *ctx, lsm9ds1_fifo_md_t *val)
+{
+  lsm9ds1_ctrl_reg9_t ctrl_reg9;
+  lsm9ds1_fifo_ctrl_t fifo_ctrl;
+  int32_t ret;
+
+  ret = lsm9ds1_read_reg(ctx, LSM9DS1_CTRL_REG9, (uint8_t*)&ctrl_reg9, 1);
+  if(ret == 0){
+    ret = lsm9ds1_read_reg(ctx, LSM9DS1_FIFO_CTRL, (uint8_t*)&fifo_ctrl, 1);
+  }
+  switch ((ctrl_reg9.fifo_en << 4) | ctrl_reg9.fifo_en){
+    case LSM9DS1_FIFO_OFF:
+      *val = LSM9DS1_FIFO_OFF;
+      break;
+    case LSM9DS1_BYPASS_MODE:
+      *val = LSM9DS1_BYPASS_MODE;
+      break;
+    case LSM9DS1_FIFO_MODE:
+      *val = LSM9DS1_FIFO_MODE;
+      break;
+    case LSM9DS1_STREAM_TO_FIFO_MODE:
+      *val = LSM9DS1_STREAM_TO_FIFO_MODE;
+      break;
+    case LSM9DS1_BYPASS_TO_STREAM_MODE:
+      *val = LSM9DS1_BYPASS_TO_STREAM_MODE;
+      break;
+    case LSM9DS1_STREAM_MODE:
+      *val = LSM9DS1_STREAM_MODE;
+      break;
+    default:
+      *val = LSM9DS1_FIFO_OFF;
+      break;
+  }
+
+  return ret;
+}
+
+/**
+  * @brief  FIFOfullstatus.[get]
+  *
+  * @param  ctx    Read / write interface definitions.(ptr)
+  * @param  val    Iet the values of "fss" in reg FIFO_SRC.(ptr)
+  * @retval        Interface status (MANDATORY: return 0 -> no Error).
+  *
+  */
+int32_t lsm9ds1_fifo_full_flag_get(lsm9ds1_ctx_t *ctx, uint8_t *val)
+{
+  lsm9ds1_fifo_src_t fifo_src;
+  int32_t ret;
+
+  ret = lsm9ds1_read_reg(ctx, LSM9DS1_FIFO_SRC, (uint8_t*)&fifo_src, 1);
+  *val = fifo_src.fss;
+
+  return ret;
+}
+
+/**
+  * @brief  Number of unread words (16-bit axes) stored in FIFO.[get]
+  *
+  * @param  ctx    Read / write interface definitions.(ptr)
+  * @param  val    Iet the values of "fss" in reg FIFO_SRC.(ptr)
+  * @retval        Interface status (MANDATORY: return 0 -> no Error).
+  *
+  */
+int32_t lsm9ds1_fifo_data_level_get(lsm9ds1_ctx_t *ctx, uint8_t *val)
+{
+  lsm9ds1_fifo_src_t fifo_src;
+  int32_t ret;
+
+  ret = lsm9ds1_read_reg(ctx, LSM9DS1_FIFO_SRC, (uint8_t*)&fifo_src, 1);
+  *val = fifo_src.fss;
+
+  return ret;
+}
+
+/**
+  * @brief  FIFO overrun status.[get]
+  *
+  * @param  ctx    Read / write interface definitions.(ptr)
+  * @param  val    Iet the values of "ovrn" in reg FIFO_SRC.(ptr)
+  * @retval        Interface status (MANDATORY: return 0 -> no Error).
+  *
+  */
+int32_t lsm9ds1_fifo_ovr_flag_get(lsm9ds1_ctx_t *ctx, uint8_t *val)
+{
+  lsm9ds1_fifo_src_t fifo_src;
+  int32_t ret;
+
+  ret = lsm9ds1_read_reg(ctx, LSM9DS1_FIFO_SRC, (uint8_t*)&fifo_src, 1);
+  *val = fifo_src.ovrn;
+
+  return ret;
+}
+
+/**
+  * @}
+  *
+  */
+
+/**
+  * @defgroup     LSM9DS1_Self_test
+  * @brief        This section groups all the functions that manage self
+  *               test configuration
+  * @{
+  *
+  */
+
+/**
+  * @brief  Enable/disable self-test mode for accelerometer.[set]
+  *
+  * @param  ctx    Read / write interface definitions.(ptr)
+  * @param  val    Change the values of st_xl in reg CTRL_REG10.
+  * @retval        Interface status (MANDATORY: return 0 -> no Error).
+  *
+  */
+/**
+  * @brief  Enable/disable self-test mode for gyroscope.[set]
+  *
+  * @param  ctx    Read / write interface definitions.(ptr)
+  * @param  val    Change the values of st_g in reg CTRL_REG10.
+  * @retval        Interface status (MANDATORY: return 0 -> no Error).
+  *
+  */
+int32_t lsm9ds1_gy_self_test_set(lsm9ds1_ctx_t *ctx, uint8_t val)
+{
+  lsm9ds1_ctrl_reg10_t ctrl_reg10;
+  int32_t ret;
+
+  ret = lsm9ds1_read_reg(ctx, LSM9DS1_CTRL_REG10, (uint8_t*)&ctrl_reg10, 1);
+  if(ret == 0){
+    ctrl_reg10.st_g = (uint8_t)val;
+    ret = lsm9ds1_write_reg(ctx, LSM9DS1_CTRL_REG10, (uint8_t*)&ctrl_reg10, 1);
+  }
+  return ret;
+}
+
+/**
+  * @brief  Enable/disable self-test mode for gyroscope.[get]
+  *
+  * @param  ctx    Read / write interface definitions.(ptr)
+  * @param  val    Get the values of st_g in reg CTRL_REG10.(ptr)
+  * @retval        Interface status (MANDATORY: return 0 -> no Error).
+  *
+  */
+int32_t lsm9ds1_gy_self_test_get(lsm9ds1_ctx_t *ctx, uint8_t *val)
+{
+  lsm9ds1_ctrl_reg10_t ctrl_reg10;
+  int32_t ret;
+
+  ret = lsm9ds1_read_reg(ctx, LSM9DS1_CTRL_REG10, (uint8_t*)&ctrl_reg10, 1);
+  *val = (uint8_t)ctrl_reg10.st_g;
+
+  return ret;
+}
+
+/**
+  * @brief  Enable/disable self-test mode for magnatic sensor.[set]
+  *
+  * @param  ctx    Read / write interface definitions.(ptr)
+  * @param  val    Change the values of st in reg CTRL_REG1_M.
+  * @retval        Interface status (MANDATORY: return 0 -> no Error).
+  *
+  */
+int32_t lsm9ds1_mag_self_test_set(lsm9ds1_ctx_t *ctx, uint8_t val)
+{
+  lsm9ds1_ctrl_reg1_m_t ctrl_reg1_m;
+  int32_t ret;
+
+  ret = lsm9ds1_read_reg(ctx, LSM9DS1_CTRL_REG1_M, (uint8_t*)&ctrl_reg1_m, 1);
+  if(ret == 0){
+    ctrl_reg1_m.st = (uint8_t)val;
+    ret = lsm9ds1_write_reg(ctx, LSM9DS1_CTRL_REG1_M,
+                            (uint8_t*)&ctrl_reg1_m, 1);
+  }
+  return ret;
+}
+
+/**
+  * @brief  Enable/disable self-test mode for magnatic sensor.[get]
+  *
+  * @param  ctx    Read / write interface definitions.(ptr)
+  * @param  val    Get the values of st in reg CTRL_REG1_M.(ptr)
+  * @retval        Interface status (MANDATORY: return 0 -> no Error).
+  *
+  */
+int32_t lsm9ds1_mag_self_test_get(lsm9ds1_ctx_t *ctx, uint8_t *val)
+{
+  lsm9ds1_ctrl_reg1_m_t ctrl_reg1_m;
+  int32_t ret;
+
+  ret = lsm9ds1_read_reg(ctx, LSM9DS1_CTRL_REG1_M, (uint8_t*)&ctrl_reg1_m, 1);
+  *val = (uint8_t)ctrl_reg1_m.st;
+
+  return ret;
+}
+
